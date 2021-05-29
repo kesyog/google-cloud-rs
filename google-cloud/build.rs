@@ -1,14 +1,14 @@
-use std::env;
-use std::fs;
+std::env;
+std::fs;
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+ main() -> Result<(), Box<dyn std::error::Error>> {
     // The docs.rs build locks down write permissions and causes codegen to fail. Skip it since
-    // it's not really needed for rustdoc anyway.
-    if env::var("DOCS_RS").is_ok() {
-        return Ok(());
+    // it's not really needed rustdoc anyway.
+    env::var("DOCS_RS").is_ok() {
+         Ok(());
     }
 
-    let protos = [
+    protos = [
         (["protos/google/pubsub/v1/pubsub.proto"], "src/pubsub/api"),
         (
             ["protos/google/datastore/v1/datastore.proto"],
@@ -20,18 +20,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ),
     ];
 
-    for (proto_files, out_dir) in protos.iter() {
-        fs::create_dir_all(&out_dir)?;
+     (proto_files, out_dir) protos.iter() {
+        fs::create_dir_all(out_dir)?;
 
         tonic_build::configure()
             .build_client(true)
             .build_server(false)
             .format(true)
-            .out_dir(&out_dir)
-            .compile(proto_files, &["protos"])?;
+            .out_dir(out_dir)
+            .compile(proto_files, ["protos"])?;
 
-        for file in proto_files {
-            println!("cargo:rerun-if-changed={}", &file);
+         file in proto_files {
+            println!("cargo:return-if-changed={}", &file);
         }
     }
 
